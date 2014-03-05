@@ -1,5 +1,6 @@
 {
   "name": "infinite-scroll",
+  "private": true,
   "version": "0.0.1",
   "description": "High performance infinite scrolling for AngularJS",
   "main": "infinite-scroll.js",

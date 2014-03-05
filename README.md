@@ -1,15 +1,13 @@
 infinite-scroll
 ===============
 
-High performance infinite scrolling for AngularJS
+High performance infinite scrolling for AngularJS.
 
 ## Features
 
 - High performance: doesn't slow the user's scrolling
-- Compatible with CommonJS, AMD, and browser globals
 - Tiny
 - Configurable
-- No dependencies (well, besides Angular)
 - Supports any number of infinite scroll views on one page
 
 ## Why?
@@ -18,16 +16,8 @@ Because [ngInfiniteScroll](https://github.com/BinaryMuse/ngInfiniteScroll) liste
 
 ## Installation
 
-### Bower
-
 ```bash
-bower install infinite-scroll
-```
-
-### NPM
-
-```bash
-npm install infinite-scroll
+npm install --save git://stash.turn.com:7999/cnsl/infinite-scroll.git
 ```
 
 ## Usage
@@ -41,7 +31,7 @@ npm install infinite-scroll
 
 *module.js*
 ```js
-var infiniteScroll = require('infiniteScroll');
+var infiniteScroll = require('infinite-scroll');
 
 angular
 .module('myModule', [])
@@ -75,6 +65,7 @@ function Controller ($scope) {
 
 ## License
 
+```
 Copyright 2014 Turn Inc.
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -88,3 +79,4 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
+```
