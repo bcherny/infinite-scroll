@@ -23,6 +23,7 @@ npm install --save git://stash.turn.com:7999/cnsl/infinite-scroll.git
 ## Usage
 
 *template.html*
+
 ```html
 	...
 	<div ng-infinite-scroll="callbackFn"></div>
@@ -30,6 +31,7 @@ npm install --save git://stash.turn.com:7999/cnsl/infinite-scroll.git
 ```
 
 *module.js*
+
 ```js
 var infiniteScroll = require('infinite-scroll');
 
@@ -40,6 +42,7 @@ angular
 ```
 
 *controller.js*
+
 ```js
 function Controller ($scope) {
    $scope.callbackFn = function() { ... };
@@ -50,6 +53,7 @@ function Controller ($scope) {
 ## Configuration
 
 *template.html*
+
 ```html
 	...
 	<!-- basic usage -->
