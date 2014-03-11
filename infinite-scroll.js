@@ -30,7 +30,7 @@ return [
       restrict: 'A',
       scope: false,
       link: function($scope, element, attrs) {
-        var check, fn, getVisibility, interval, isLoading, measureWindowHeight, visibilityChange, windowHeight;
+        var check, doneLoading, fn, getVisibility, interval, isLoading, measureWindowHeight, visibilityChange, windowHeight;
         fn = attrs.infiniteScroll;
         interval = null;
         isLoading = false;
@@ -41,11 +41,12 @@ return [
           }
           if ($window.pageYOffset + windowHeight - options.tolerance - element.height() > 0) {
             isLoading = true;
-            ($scope[fn]()).then(function() {
-              return isLoading = false;
-            });
+            ($scope[fn]()).then(doneLoading, doneLoading);
             return $scope.$apply();
           }
+        };
+        doneLoading = function() {
+          return isLoading = false;
         };
         measureWindowHeight = function() {
           return windowHeight = $window.innerHeight;

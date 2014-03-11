@@ -60,11 +60,14 @@ return ['$window', ($window) ->
 					isLoading = true
 
 					# trigger the callback
-					(do $scope[fn]).then ->
-						isLoading = false
+					(do $scope[fn]).then doneLoading, doneLoading
 
 					# let angular know this is an async callback
 					do $scope.$apply
+
+			# resets isLoading flag
+			doneLoading = ->
+				isLoading = false
 
 			# measures window height on resize, for caching purposes
 			measureWindowHeight = ->
@@ -82,7 +85,6 @@ return ['$window', ($window) ->
 
 			# returns true if the element is visible, and false if it is not
 			getVisibility = ->
-
 				not not element[0].offsetHeight
 
 
