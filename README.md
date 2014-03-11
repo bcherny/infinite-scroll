@@ -17,7 +17,7 @@ Because [ngInfiniteScroll](https://github.com/BinaryMuse/ngInfiniteScroll) liste
 ## Installation
 
 ```bash
-npm install --save git://stash.turn.com:7999/cnsl/infinite-scroll.git
+npm install --save git+ssh://git@stash.turn.com:7999/cnsl/infinite-scroll.git
 ```
 
 ## Usage

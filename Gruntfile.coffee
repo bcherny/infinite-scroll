@@ -36,17 +36,17 @@ module.exports = (grunt) ->
 		watch:
 			all:
 				files: [name + '.coffee']
-				tasks: ['umd', 'uglify']
+				tasks: ['coffee', 'umd', 'uglify']
 				options:
 					interrupt: true
 
 	# configure coffee, uglify, umd
 	config.bytesize.all.src = [name + '.js', name + '.min.js']
 	config.coffee.compile.files[name + '.js'] = name + '.coffee'
-	config.uglify.standard.files[name + '.min.js'] = [name + '.min.js']
+	config.uglify.standard.files[name + '.min.js'] = [name + '.js']
 	config.umd.all =
 		src: name + '.js'
-		dest: name + '.min.js'
+		dest: name + '.js'
 		objectToExport: name.replace '-', ''
 		amdModuleId: name
 		globalAlias: name

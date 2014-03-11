@@ -17,14 +17,14 @@ return ['$window', ($window) ->
 	options =
 
 		# how often to poll for changes (ms)
-		interval: 50
+		interval: 100
 
 		# how far from the bottom of the screen the user
 		# must be scrolled to trigger the callback (px)
-		tolerance: 0
+		tolerance: 100
 
 
-	return
+	infinitescroll = {
 
 		# use infinite-scroll as an attribute only
 		restrict: 'A'
@@ -44,36 +44,24 @@ return ['$window', ($window) ->
 			isLoading = false
 
 			# cache window height to prevent unnecessary DOM layouts, this is set by measureWindowHeight
-			windowHeight = do measureWindowHeight
-
-
-			# ensure that fn is defined on the $scope
-			if not $scope[fn]
-				throw new TypeError "infinite-scroll expects function '#{fn}' to be defined on $scope"
-
-
-			# check for infinite-scroll-interval and infinite-scroll-tolerance attributes
-			if attrs.infiniteScrollInterval > -1
-				options.interval = attrs.infiniteScrollInterval
-
-			if attrs.infiniteScrollTolerance > -1
-				options.tolerance = attrs.infiniteScrollTolerance
-
+			windowHeight = 0
 
 			# checks scroll distance, calling fn as needed
 			check = ->
 
 				# return early if a load is already in progress
-				if isLoading then return
+				if isLoading
+					return
 
 				# only load for downscrolls (ignore upscrolls)
-				if $window.pageYOffset + windowHeight - options.tolerance - element[0].offsetHeight > 0
+				if $window.pageYOffset + windowHeight - options.tolerance - element.height() > 0
 
 					# set this to prevent any mroe requests while this one is in progress
 					isLoading = true
 
 					# trigger the callback
-					(do $scope[fn]).then -> isLoading = false
+					(do $scope[fn]).then ->
+						isLoading = false
 
 					# let angular know this is an async callback
 					do $scope.$apply
@@ -98,6 +86,22 @@ return ['$window', ($window) ->
 				not not element[0].offsetHeight
 
 
+			# ensure that fn is defined on the $scope
+			if not $scope[fn]
+				throw new TypeError "infinite-scroll expects function '#{fn}' to be defined on $scope"
+
+			# check for infinite-scroll-interval and infinite-scroll-tolerance attributes
+			if attrs.infiniteScrollInterval > -1
+				options.interval = attrs.infiniteScrollInterval
+
+			if attrs.infiniteScrollTolerance > -1
+				options.tolerance = attrs.infiniteScrollTolerance
+
+
+			# measure initial window height
+			do measureWindowHeight
+
+
 			# begin polling for scroll events when an element becomes
 			# visible, and clear its interval when it becomes invisible
 			$scope.$watch getVisibility, visibilityChange
@@ -112,3 +116,7 @@ return ['$window', ($window) ->
 			$scope.$on '$destroy', ->
 				clearInterval interval
 				$window.removeEventListener 'resize', measureWindowHeight
+
+	}
+
+]

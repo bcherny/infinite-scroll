@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.0.2",
   "description": "High performance infinite scrolling for AngularJS",
-  "main": "infinite-scroll.min.js",
+  "main": "infinite-scroll.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
