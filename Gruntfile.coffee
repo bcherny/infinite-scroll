@@ -12,6 +12,12 @@ module.exports = (grunt) ->
 			all:
 				src: []
 
+		coffee:
+			compile:
+				files: {}
+			options:
+				bare: true
+
 		uglify:
 			options:
 				mangle:
@@ -27,8 +33,16 @@ module.exports = (grunt) ->
 		umd:
 			all: {}
 
+		watch:
+			all:
+				files: [name + '.coffee']
+				tasks: ['umd', 'uglify']
+				options:
+					interrupt: true
+
 	# configure coffee, uglify, umd
 	config.bytesize.all.src = [name + '.js', name + '.min.js']
+	config.coffee.compile.files[name + '.js'] = name + '.coffee'
 	config.uglify.standard.files[name + '.min.js'] = [name + '.min.js']
 	config.umd.all =
 		src: name + '.js'
@@ -44,8 +58,10 @@ module.exports = (grunt) ->
 
 	# load tasks
 	grunt.loadNpmTasks 'grunt-bytesize'
+	grunt.loadNpmTasks 'grunt-contrib-coffee'
+	grunt.loadNpmTasks 'grunt-contrib-watch'
 	grunt.loadNpmTasks 'grunt-contrib-uglify'
 	grunt.loadNpmTasks 'grunt-umd'
 
 	# register tasks
-	grunt.registerTask 'default', ['umd', 'uglify', 'bytesize']
+	grunt.registerTask 'default', ['coffee', 'umd', 'uglify', 'bytesize']

@@ -1,0 +1,54 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<title>infinite-scroll demo</title>
+	<link rel="stylesheet" href="style.css" />
+</head>
+<body ng-app="demo" ng-controller="app">
+
+	<div infinite-scroll="scroll">
+		<div ng-repeat="item in items" style="background:rgb({{item.rgb}})"></div>
+	</div>
+
+	<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.0.8/angular.min.js"></script>
+	<script src="../infinite-scroll.min.js"></script>
+	<script>
+
+		angular
+		.module('demo', [])
+		.directive('infiniteScroll', window['infinite-scroll'])
+		.controller('app', App);
+
+		function App ($scope, $q, $timeout) {
+
+			$scope.items = [];
+			
+			$scope.scroll = function() {
+
+				for (var n = 10; n--;) {
+					$scope.items.push({
+						rgb: 0 + ',' + random(0,200) + ',' + random(200,255)
+					})
+				}
+
+				var deferred = $q.defer();
+
+				deferred.resolve();
+
+				return deferred.promise;
+			};
+
+			$scope.scroll();
+
+		}
+
+		App.$inject = ['$scope', '$q', '$timeout'];
+
+		function random (min, max) {
+			return Math.floor(Math.random() * (max - min + 1) + min);
+		}
+
+	</script>
+</body>
+</html>

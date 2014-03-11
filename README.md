@@ -25,7 +25,7 @@ npm install --save git://stash.turn.com:7999/cnsl/infinite-scroll.git
 *template.html*
 
 ```html
-<div ng-infinite-scroll="callbackFn"></div>
+<div infinite-scroll="callbackFn"></div>
 ```
 
 *module.js*
@@ -35,14 +35,17 @@ var infiniteScroll = require('infinite-scroll');
 
 angular
 .module('myModule', [])
-.directive('infiniteScroll', infiniteScroll);
+.directive('infiniteScroll', infiniteScroll)
 ```
 
 *controller.js*
 
 ```js
 function Controller ($scope) {
-   $scope.callbackFn = function() { ... };
+   $scope.callbackFn = function() {
+   	  // must return a thenable promise
+   	  // see demo/index.html if you're not sure what that means
+   };
 }
 ```
 
@@ -52,13 +55,13 @@ function Controller ($scope) {
 
 ```html
 <!-- basic usage -->
-<div ng-infinite-scroll="callbackFn1"></div>
+<div infinite-scroll="callbackFn1"></div>
 
 <!-- poll for scrolling every 500ms -->
-<div ng-infinite-scroll="callbackFn2" ng-infinite-scroll-interval="500"></div>
+<div infinite-scroll="callbackFn2" infinite-scroll-interval="500"></div>
 
 <!-- call callbackFn3() when the user is within 200px of the scrollable area's edge -->
-<div ng-infinite-scroll="callbackFn3" ng-infinite-scroll-tollerance="200"></div>
+<div infinite-scroll="callbackFn3" infinite-scroll-tollerance="200"></div>
 ```
 
 ## License

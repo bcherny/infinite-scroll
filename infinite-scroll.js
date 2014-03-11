@@ -1,19 +1,18 @@
 /**
- * infinite-scroll
- * @dependencies: angularjs
- * @author: Boris Cherny <bcherny@turn.com>
- * @license: Apache2 <http://www.apache.org/licenses/LICENSE-2.0.txt>
- * @usage:
- *
- *  <div infinite-scroll="callbackFn"></div>
- *
- */
-
-module.exports = ['$window', function ($window) {
+* infinite-scroll
+* @dependencies: angularjs
+* @author: Boris Cherny <bcherny@turn.com>
+* @license: Apache2 <http://www.apache.org/licenses/LICENSE-2.0.txt>
+* @usage:
+*
+*  <div infinite-scroll="callbackFn"></div>
+*
+*/
 
 
-	'use strict';
+return ['$window', function ($window) {
 
+	"use strict";
 
 	var options = {
 
@@ -28,7 +27,7 @@ module.exports = ['$window', function ($window) {
 		 * how far from the bottom of the screen the user
 		 * must be scrolled to trigger the callback (px)
 		 */
-		tolerance: 100
+		tolerance: 0
 
 
 	};
@@ -56,23 +55,9 @@ module.exports = ['$window', function ($window) {
 
 
 			/**
-			 * cache window height to prevent unnecessary DOM layouts,
-			 * this is set by measureWindowHeight()
-			 */
-				windowHeight = measureWindowHeight(),
-
-
-			/**
 			 * query interval instance
 			 */
 				interval,
-
-
-			/**
-			 * cache locations at which the callback has already been triggered,
-			 * to avoid double-trigerring the callback
-			 */
-				bucketCache = [],
 
 
 			/**
@@ -85,7 +70,7 @@ module.exports = ['$window', function ($window) {
 			 * ensure that fn is defined on the $scope
 			 */
 			if (!$scope[fn]) {
-				throw new TypeError('infinite-scroll expects function "', fn, '" to be defined on $scope');
+				throw new TypeError('infinite-scroll expects function "' + fn + '" to be defined on $scope');
 			}
 
 
@@ -109,19 +94,8 @@ module.exports = ['$window', function ($window) {
 					return;
 				}
 
-				var scrollY = $window.pageYOffset,
-					delta = scrollY + windowHeight - options.tolerance - element.height(),
-					bucket = Math.round(scrollY/options.tolerance);
-
-				if (
-					// don't load twice for the same scroll position
-					bucketCache.indexOf(bucket) < 0 &&
-
-					// only load for downscrolls (ignore upscrolls)
-					delta > 0
-				) {
-
-					bucketCache.push(bucket);
+				// only load for downscrolls (ignore upscrolls)
+				if ($window.pageYOffset - element[0].scrollHeight + options.tolerance + element[0].offsetHeight > 0) {
 
 					isLoading = true;
 
@@ -129,16 +103,11 @@ module.exports = ['$window', function ($window) {
 						isLoading = false;
 					});
 
+					// let angular know this is an async callback
+					$scope.$apply();
+
 				}
 
-			}
-
-
-			/**
-			 * measures window height on resize, for caching purposes
-			 */
-			function measureWindowHeight() {
-				return windowHeight = $window.innerHeight;
 			}
 
 
@@ -160,7 +129,6 @@ module.exports = ['$window', function ($window) {
 			 * returns true if the element is visible, and false if it is not
 			 */
 			function getVisibility() {
-
 				return !!element[0].offsetHeight;
 
 			}
@@ -171,12 +139,6 @@ module.exports = ['$window', function ($window) {
 			 * visible, and clear its interval when it becomes invisible
 			 */
 			$scope.$watch(getVisibility, visibilityChange);
-
-
-			/**
-			 * re-measure window height on window resize
-			 */
-			$window.addEventListener('resize', measureWindowHeight);
 			
 
 			/**
@@ -185,7 +147,6 @@ module.exports = ['$window', function ($window) {
 			 */
 			$scope.$on('$destroy', function() {
 				clearInterval(interval);
-				$window.removeEventListener('resize', measureWindowHeight);
 			});
 			
 
