@@ -67,6 +67,10 @@ function Controller ($scope) {
 <div infinite-scroll="callbackFn3" infinite-scroll-active="foo == true"></div>
 ```
 
+## Todo
+
+- Integration tests
+
 ## License
 
 ```
