@@ -1,5 +1,5 @@
 angular
-.module 'infiniteScroll', ['infiniteScrollTemplate']
+.module 'turn/infiniteScroll', ['infiniteScrollTemplate']
 .constant 'defaults',
 
 	# how often to poll for changes (ms)

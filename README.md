@@ -34,7 +34,7 @@ bower install -S ssh://git@stash.turn.com:7999/cnsl/infinite-scroll.git
 require('infinite-scroll');
 
 angular
-.module('myModule', ['infiniteScroll'])
+.module('myModule', ['turn/infiniteScroll'])
 ...
 ```
 

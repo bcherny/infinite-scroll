@@ -1,6 +1,6 @@
 describe 'infinite-scroll', ->
 
-	beforeEach module 'infiniteScroll'
+	beforeEach module 'turn/infiniteScroll'
 	
 	beforeEach ->
 
