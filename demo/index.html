@@ -3,47 +3,77 @@
 <head>
 	<meta charset="utf-8" />
 	<title>infinite-scroll demo</title>
-	<link rel="stylesheet" href="style.css" />
-</head>
-<body ng-app="demo" ng-controller="app">
+	<style>
 
-	<div infinite-scroll="scroll">
+		* { border: 0; margin: 0; padding: 0 }
+
+		html,
+		body {
+			height: 100%;
+			width: 100%;
+		}
+
+		[infinite-scroll] {
+			height: 100%;
+			margin: 100px 0 0;
+		}
+
+		[infinite-scroll] div {
+			background: #eee;
+			height: 20%;
+			margin: 10px;
+		}
+
+	</style>
+</head>
+<body ng-app="demo" ng-controller="demo">
+
+	<div infinite-scroll="scroll()" infinite-scroll-active="active">
 		<div ng-repeat="item in items" style="background:rgb({{item.rgb}})"></div>
 	</div>
 
-	<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.0.8/angular.min.js"></script>
-	<script src="../infinite-scroll.min.js"></script>
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.js"></script>
+	<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.0.8/angular.js"></script>
+	<script src="../dist/infinite-scroll.js"></script>
 	<script>
 
 		angular
-		.module('demo', [])
-		.directive('infiniteScroll', window['infinite-scroll'])
-		.controller('app', App);
-
-		function App ($scope, $q, $timeout) {
+		.module('demo', ['infiniteScroll'])
+		.controller('demo', function ($scope, $q, $timeout) {
 
 			$scope.items = [];
+
+			$scope.active = true;
 			
 			$scope.scroll = function() {
 
-				for (var n = 10; n--;) {
-					$scope.items.push({
-						rgb: 0 + ',' + random(0,200) + ',' + random(200,255)
-					})
-				}
-
 				var deferred = $q.defer();
 
-				deferred.resolve();
+				$timeout(function(){
+
+					// generate 100 mock items
+					$scope.items = $scope.items.concat(
+						Array
+						.apply(null, Array(100))
+						.map(rgb)
+					);
+
+					deferred.resolve();
+
+				});
 
 				return deferred.promise;
 			};
 
 			$scope.scroll();
 
-		}
+		});
 
-		App.$inject = ['$scope', '$q', '$timeout'];
+		function rgb() {
+			return {
+				rgb: 0 + ',' + random(0,200) + ',' + random(200,255)
+			};
+		}
 
 		function random (min, max) {
 			return Math.floor(Math.random() * (max - min + 1) + min);

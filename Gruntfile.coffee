@@ -1,67 +1,74 @@
 module.exports = (grunt) ->
 
-	nameParts = __dirname.split '/'
-	name = nameParts[nameParts.length - 1]
-	pkg = grunt.file.readJSON 'package.json'
-	deps = grunt.util._.keys pkg.dependencies
-	config =
+	[
+		'grunt-contrib-clean'
+		'grunt-contrib-coffee'
+		'grunt-contrib-concat'
+		'grunt-contrib-jasmine'
+		'grunt-contrib-watch'
+		'grunt-html2js'
+		'grunt-ngmin'
+	].forEach grunt.loadNpmTasks
 
-		pkg: pkg
+	# task sets
+	build = ['ngmin', 'html2js', 'concat', 'clean']
+	test = ['html2js', 'coffee', 'jasmine']
 
-		bytesize:
-			all:
-				src: []
+	# task defs
+	grunt.initConfig
+
+		pkg: grunt.file.readJSON 'package.json'
+
+		clean:
+			main: ['./dist/template.js']
 
 		coffee:
-			compile:
-				files: {}
-			options:
-				bare: true
+			files:
+				'test/test.js': 'test/test.coffee'
 
-		uglify:
-			options:
-				mangle:
-					toplevel: true
-				compress:
-					dead_code: true
-					unused: true
-					join_vars: true
-				comments: false
-			standard:
-				files: {}
+		concat:
+			main:
+				src: ['./dist/template.js', './dist/<%= pkg.name %>.js']
+				dest: './dist/<%= pkg.name %>.js'
 
-		umd:
-			all: {}
+		html2js:
+			main:
+				src: './src/*.html'
+				dest: './dist/template.js'
+			options:
+				module: 'infiniteScrollTemplate'
+
+		jasmine:
+			test:
+				src: './src/<%= pkg.name %>.js'
+				options:
+					specs: './test/test.js'
+					vendor: [
+						'./bower_components/jquery/dist/jquery.js'
+						'./bower_components/angular/angular.js'
+						'./bower_components/angular-mocks/angular-mocks.js'
+						'./dist/template.js'
+					]
+					keepRunner: true
+
+		ngmin:
+			main:
+				src: ['./src/<%= pkg.name %>.js']
+				dest: './dist/<%= pkg.name %>.js'
 
 		watch:
-			all:
-				files: [name + '.coffee']
-				tasks: ['coffee', 'umd', 'uglify']
+			main:
+				files: './src/*'
+				tasks: build
 				options:
 					interrupt: true
+					spawn: true
+			test:
+				files: './test/*.js'
+				tasks: test
+				options:
+					interrupt: true
+					spawn: true
 
-	# configure coffee, uglify, umd
-	config.bytesize.all.src = [name + '.js', name + '.min.js']
-	config.coffee.compile.files[name + '.js'] = name + '.coffee'
-	config.uglify.standard.files[name + '.min.js'] = [name + '.js']
-	config.umd.all =
-		src: name + '.js'
-		dest: name + '.js'
-		objectToExport: name.replace '-', ''
-		amdModuleId: name
-		globalAlias: name
-		deps:
-			default: deps or []
-
-	# load config
-	grunt.config.init config
-
-	# load tasks
-	grunt.loadNpmTasks 'grunt-bytesize'
-	grunt.loadNpmTasks 'grunt-contrib-coffee'
-	grunt.loadNpmTasks 'grunt-contrib-watch'
-	grunt.loadNpmTasks 'grunt-contrib-uglify'
-	grunt.loadNpmTasks 'grunt-umd'
-
-	# register tasks
-	grunt.registerTask 'default', ['coffee', 'umd', 'uglify', 'bytesize']
+	grunt.registerTask 'default', build
+	grunt.registerTask 'test', test

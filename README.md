@@ -17,7 +17,7 @@ Because [ngInfiniteScroll](https://github.com/BinaryMuse/ngInfiniteScroll) liste
 ## Installation
 
 ```bash
-npm install --save git+ssh://git@stash.turn.com:7999/cnsl/infinite-scroll.git
+bower install -S ssh://git@stash.turn.com:7999/cnsl/infinite-scroll.git
 ```
 
 ## Usage
@@ -25,17 +25,17 @@ npm install --save git+ssh://git@stash.turn.com:7999/cnsl/infinite-scroll.git
 *template.html*
 
 ```html
-<div infinite-scroll="callbackFn"></div>
+<div infinite-scroll="callbackFn()"></div>
 ```
 
 *module.js*
 
 ```js
-var infiniteScroll = require('infinite-scroll');
+require('infinite-scroll');
 
 angular
-.module('myModule', [])
-.directive('infiniteScroll', infiniteScroll)
+.module('myModule', ['infiniteScroll'])
+...
 ```
 
 *controller.js*
@@ -61,7 +61,10 @@ function Controller ($scope) {
 <div infinite-scroll="callbackFn2" infinite-scroll-interval="500"></div>
 
 <!-- call callbackFn3() when the user is within 200px of the scrollable area's edge -->
-<div infinite-scroll="callbackFn3" infinite-scroll-tollerance="200"></div>
+<div infinite-scroll="callbackFn3" infinite-scroll-tolerance="200"></div>
+
+<!-- disable infinite scroll when $scope.foo evaluates to false -->
+<div infinite-scroll="callbackFn3" infinite-scroll-active="foo == true"></div>
 ```
 
 ## License
