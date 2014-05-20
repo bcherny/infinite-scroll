@@ -1,6 +1,6 @@
 angular
 .module 'turn/infiniteScroll', ['infiniteScrollTemplate']
-.constant 'defaults',
+.constant 'infiniteScrollDefaults',
 
 	# how often to poll for changes (ms)
 	interval: 100
@@ -9,7 +9,7 @@ angular
 	# must be scrolled to trigger the callback (px)
 	tolerance: 0
 
-.directive 'infiniteScroll', ($window, defaults) ->
+.directive 'infiniteScroll', ($window, infiniteScrollDefaults) ->
 
 	replace: true
 	restrict: 'A'
@@ -30,10 +30,10 @@ angular
 		
 		# set default options
 		if not angular.isNumber scope.interval
-			scope.interval = defaults.interval
+			scope.interval = infiniteScrollDefaults.interval
 
 		if not angular.isNumber scope.tolerance
-			scope.tolerance = defaults.tolerance 
+			scope.tolerance = infiniteScrollDefaults.tolerance 
 
 		angular.extend scope,
 
@@ -90,7 +90,10 @@ angular
 
 		# begin polling for scroll events when an element becomes
 		# visible, and clear its interval when it becomes invisible
-		scope.$watch 'active', scope.setActive
+		if angular.isDefined scope.active
+			scope.$watch 'active', scope.setActive
+		else
+			scope.setActive true
 
 		# re-measure window height on window resize
 		$window.addEventListener 'resize', scope.measure
