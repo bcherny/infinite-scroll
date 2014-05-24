@@ -49,6 +49,8 @@ function Controller ($scope) {
 }
 ```
 
+*Note: When `callbackFn` returns a rejected promise, infinite-scroll will deactivate itself. It can then be reactivated by setting the infinite-scroll-active attribute to true.*
+
 ## Configuration
 
 *template.html*

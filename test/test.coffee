@@ -102,15 +102,15 @@ describe 'infinite-scroll', ->
 			do expect @scope.done
 			.toHaveBeenCalled
 
-		it 'should call #done when #fn is rejected', ->
+		it 'should call #deactivate when #fn is rejected', ->
 
-			spyOn @scope, 'done'
+			spyOn @scope, 'deactivate'
 
 			@scope.fn = -> then: (good, bad) -> do bad
 
 			do @scope.load
 
-			do expect @scope.done
+			do expect @scope.deactivate
 			.toHaveBeenCalled
 
 
@@ -140,6 +140,18 @@ describe 'infinite-scroll', ->
 
 			expect @scope.windowHeight
 			.toBe $window.innerHeight
+
+
+	describe '#deactivate', ->
+
+		it 'should set scope.active to false', ->
+
+			@scope.active = true
+
+			do @scope.deactivate
+
+			expect @scope.active
+			.toBe false
 
 
 	describe '#setActive', ->

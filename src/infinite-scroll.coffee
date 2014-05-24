@@ -67,7 +67,7 @@ angular
 				scope.isLoading = true
 
 				# trigger the callback
-				(do scope.fn).then scope.done, scope.done
+				(do scope.fn).then scope.done, scope.deactivate
 
 			# resets isLoading flag
 			done: ->
@@ -76,6 +76,10 @@ angular
 			# measures window height on resize, for caching purposes
 			measure: ->
 				scope.windowHeight = $window.innerHeight
+
+			# stop polling
+			deactivate: ->
+				scope.active = false
 
 			# fired when an element becomes visible or invisible
 			setActive: (active) ->

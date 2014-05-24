@@ -49,13 +49,16 @@ angular.module('turn/infiniteScroll', ['infiniteScrollTemplate']).constant('infi
           },
           load: function () {
             scope.isLoading = true;
-            return scope.fn().then(scope.done, scope.done);
+            return scope.fn().then(scope.done, scope.deactivate);
           },
           done: function () {
             return scope.isLoading = false;
           },
           measure: function () {
             return scope.windowHeight = $window.innerHeight;
+          },
+          deactivate: function () {
+            return scope.active = false;
           },
           setActive: function (active) {
             clearInterval(scope.timer);

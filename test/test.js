@@ -79,8 +79,8 @@ describe('infinite-scroll', function() {
       this.scope.load();
       return expect(this.scope.done).toHaveBeenCalled();
     });
-    return it('should call #done when #fn is rejected', function() {
-      spyOn(this.scope, 'done');
+    return it('should call #deactivate when #fn is rejected', function() {
+      spyOn(this.scope, 'deactivate');
       this.scope.fn = function() {
         return {
           then: function(good, bad) {
@@ -89,7 +89,7 @@ describe('infinite-scroll', function() {
         };
       };
       this.scope.load();
-      return expect(this.scope.done).toHaveBeenCalled();
+      return expect(this.scope.deactivate).toHaveBeenCalled();
     });
   });
   describe('#done', function() {
@@ -107,6 +107,13 @@ describe('infinite-scroll', function() {
       this.scope.measure();
       return expect(this.scope.windowHeight).toBe($window.innerHeight);
     }));
+  });
+  describe('#deactivate', function() {
+    return it('should set scope.active to false', function() {
+      this.scope.active = true;
+      this.scope.deactivate();
+      return expect(this.scope.active).toBe(false);
+    });
   });
   return describe('#setActive', function() {
     it('should clear the timer', function() {
