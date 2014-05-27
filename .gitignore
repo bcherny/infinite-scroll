@@ -1,4 +1,7 @@
 .DS_Store
+.grunt
+bower_components
 node_modules
 npm-debug.log
 Gruntfile.js
+_SpecRunner.html

@@ -1,0 +1,16 @@
+{
+  "name": "infinite-scroll",
+  "version": "0.1.0",
+  "description": "High performance infinite scrolling for AngularJS",
+  "main": "dist/infinite-scroll.js",
+  "authors": [
+    "Boris Cherny <bcherny@turn.com>"
+  ],
+  "license": "Apache2",
+  "ignore": [
+    "node_modules",
+    "bower_components",
+    "test",
+    "src"
+  ]
+}
