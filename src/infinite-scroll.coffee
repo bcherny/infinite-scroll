@@ -9,6 +9,10 @@ angular
 	# must be scrolled to trigger the callback (px)
 	tolerance: 0
 
+	# class to add to element when its infinite-scroll
+	# instance is disabled
+	disabledClassName: 'disabled'
+
 .directive 'infiniteScroll', ($window, infiniteScrollDefaults) ->
 
 	replace: true
@@ -20,7 +24,8 @@ angular
 		fn: '&infiniteScroll'
 		interval: '&infiniteScrollInterval'
 		tolerance: '&infiniteScrollTolerance'
-		active: '=infiniteScrollActive'
+		active: '&infiniteScrollActive'
+		disabledClassName: '&infiniteScrollDisabledClass'
 
 	link: (scope, element, attrs) ->
 
@@ -34,6 +39,9 @@ angular
 
 		if not angular.isNumber scope.tolerance
 			scope.tolerance = infiniteScrollDefaults.tolerance 
+
+		if not angular.isString scope.disabledClassName
+			scope.disabledClassName = infiniteScrollDefaults.disabledClassName 
 
 		angular.extend scope,
 
@@ -87,7 +95,10 @@ angular
 				clearInterval scope.timer
 
 				if active
+					element.removeClass scope.disabledClassName
 					scope.timer = setInterval scope.check, scope.interval
+				else
+					element.addClass scope.disabledClassName
 
 		# measure initial window height
 		do scope.measure

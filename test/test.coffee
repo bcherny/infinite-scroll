@@ -204,3 +204,31 @@ describe 'infinite-scroll', ->
 			# setInterval should have been called
 			expect window.setInterval
 			.toHaveBeenCalledWith @scope.check, @scope.interval
+
+		it 'should remove the disabled class if set to active', ->
+
+			@scope.disabledClassName = 'foo'
+
+			@element.addClass @scope.disabledClassName
+
+			expect @element.hasClass @scope.disabledClassName
+			.toBe true
+
+			@scope.setActive true
+
+			expect @element.hasClass @scope.disabledClassName
+			.toBe false
+
+		it 'should add the disabled class if set to inactive', ->
+
+			@scope.disabledClassName = 'foo'
+
+			@element.removeClass @scope.disabledClassName
+
+			expect @element.hasClass @scope.disabledClassName
+			.toBe false
+
+			@scope.setActive false
+
+			expect @element.hasClass @scope.disabledClassName
+			.toBe true

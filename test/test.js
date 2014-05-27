@@ -131,7 +131,7 @@ describe('infinite-scroll', function() {
       this.scope.setActive(null);
       return expect(this.scope.timer).toBe(null);
     });
-    return it('should set a new timer when passed a truthy argument', function() {
+    it('should set a new timer when passed a truthy argument', function() {
       spyOn(window, 'setInterval').andCallThrough();
       this.scope.timer = null;
       this.scope.check = function() {};
@@ -139,6 +139,20 @@ describe('infinite-scroll', function() {
       this.scope.setActive(42);
       expect(typeof this.scope.timer).toBe('number');
       return expect(window.setInterval).toHaveBeenCalledWith(this.scope.check, this.scope.interval);
+    });
+    it('should remove the disabled class if set to active', function() {
+      this.scope.disabledClassName = 'foo';
+      this.element.addClass(this.scope.disabledClassName);
+      expect(this.element.hasClass(this.scope.disabledClassName)).toBe(true);
+      this.scope.setActive(true);
+      return expect(this.element.hasClass(this.scope.disabledClassName)).toBe(false);
+    });
+    return it('should add the disabled class if set to inactive', function() {
+      this.scope.disabledClassName = 'foo';
+      this.element.removeClass(this.scope.disabledClassName);
+      expect(this.element.hasClass(this.scope.disabledClassName)).toBe(false);
+      this.scope.setActive(false);
+      return expect(this.element.hasClass(this.scope.disabledClassName)).toBe(true);
     });
   });
 });

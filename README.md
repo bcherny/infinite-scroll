@@ -66,7 +66,10 @@ function Controller ($scope) {
 <div infinite-scroll="callbackFn3" infinite-scroll-tolerance="200"></div>
 
 <!-- disable infinite scroll when $scope.foo evaluates to false -->
-<div infinite-scroll="callbackFn3" infinite-scroll-active="foo == true"></div>
+<div infinite-scroll="callbackFn4" infinite-scroll-active="foo == true"></div>
+
+<!-- set infinite scroll className to "inactive" when infinite-scroll is disabled -->
+<div infinite-scroll="callbackFn5" infinite-scroll-disabled-class="inactive"></div>
 ```
 
 ## Todo
