@@ -160,6 +160,15 @@ describe 'infinite-scroll', ->
 			expect @scope.active
 			.toBe false
 
+		it 'should set scope.isLoading to false', ->
+
+			@scope.isLoading = true
+
+			do @scope.deactivate
+
+			expect @scope.isLoading
+			.toBe false
+
 
 	describe '#setActive', ->
 

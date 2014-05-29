@@ -113,10 +113,15 @@ describe('infinite-scroll', function() {
     }));
   });
   describe('#deactivate', function() {
-    return it('should set scope.active to false', function() {
+    it('should set scope.active to false', function() {
       this.scope.active = true;
       this.scope.deactivate();
       return expect(this.scope.active).toBe(false);
+    });
+    return it('should set scope.isLoading to false', function() {
+      this.scope.isLoading = true;
+      this.scope.deactivate();
+      return expect(this.scope.isLoading).toBe(false);
     });
   });
   return describe('#setActive', function() {

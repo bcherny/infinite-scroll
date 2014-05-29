@@ -53,6 +53,7 @@ angular.module('turn/infiniteScroll', ['infiniteScrollTemplate']).constant('infi
           return scope.windowHeight = $window.innerHeight;
         },
         deactivate: function() {
+          scope.isLoading = false;
           return scope.active = false;
         },
         setActive: function(active) {
