@@ -10,6 +10,11 @@ High performance infinite scrolling for AngularJS.
 - Configurable
 - Supports any number of infinite scroll views on one page
 
+## Dependencies
+
+- Angular 1.0.8
+- jQuery ^1.11
+
 ## Why?
 
 Because [ngInfiniteScroll](https://github.com/BinaryMuse/ngInfiniteScroll) listens to the `onScroll` event, bogging down page performance, and is unnecessarily complex.
