@@ -61,7 +61,7 @@ angular
 			check: ->
 
 				# return early if a load is already in progress
-				return false if scope.isLoading
+				return false if scope.isLoading or not scope.active
 
 				# load if the user is scrolled to the bottom of the window
 				if $window.pageYOffset + scope.windowHeight + scope.tolerance - element[0].scrollHeight - scope.elementOffset.top > 0

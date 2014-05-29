@@ -37,6 +37,13 @@ describe 'infinite-scroll', ->
 			expect do @scope.check
 			.toBe false
 
+		it 'should return false if infinite-scroll is inactive', ->
+
+			@scope.active = false
+
+			expect do @scope.check
+			.toBe false
+
 		it 'should call #load if the user scrolled to the bottom of the window', inject ($window) ->
 
 			spyOn @scope, 'load'

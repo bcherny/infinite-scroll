@@ -45,7 +45,7 @@ angular.module('turn/infiniteScroll', ['infiniteScrollTemplate']).constant('infi
           windowHeight: 0,
           elementOffset: element.offset(),
           check: function () {
-            if (scope.isLoading) {
+            if (scope.isLoading || !scope.active) {
               return false;
             }
             if ($window.pageYOffset + scope.windowHeight + scope.tolerance - element[0].scrollHeight - scope.elementOffset.top > 0) {
