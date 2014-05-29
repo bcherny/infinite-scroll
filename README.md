@@ -8,6 +8,7 @@ High performance infinite scrolling for AngularJS.
 - High performance: doesn't slow the user's scrolling
 - Tiny
 - Configurable
+- Unopinionated
 - Supports any number of infinite scroll views on one page
 
 ## Dependencies
@@ -22,7 +23,7 @@ Because [ngInfiniteScroll](https://github.com/BinaryMuse/ngInfiniteScroll) liste
 ## Installation
 
 ```bash
-bower install -S ssh://git@stash.turn.com:7999/cnsl/infinite-scroll.git
+bower i -S https://github.com/turn/infinite-scroll.git
 ```
 
 ## Usage
