@@ -13,7 +13,7 @@ angular.module('turn/infiniteScroll', ['infiniteScrollTemplate']).constant('infi
       fn: '&infiniteScroll',
       interval: '&infiniteScrollInterval',
       tolerance: '&infiniteScrollTolerance',
-      active: '&infiniteScrollActive',
+      active: '=infiniteScrollActive',
       disabledClassName: '&infiniteScrollDisabledClass'
     },
     link: function(scope, element, attrs) {

@@ -24,7 +24,7 @@ angular
 		fn: '&infiniteScroll'
 		interval: '&infiniteScrollInterval'
 		tolerance: '&infiniteScrollTolerance'
-		active: '&infiniteScrollActive'
+		active: '=infiniteScrollActive'
 		disabledClassName: '&infiniteScrollDisabledClass'
 
 	link: (scope, element, attrs) ->
