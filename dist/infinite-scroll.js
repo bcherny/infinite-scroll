@@ -64,7 +64,7 @@ angular.module('turn/infiniteScroll', ['infiniteScrollTemplate']).constant('infi
           },
           deactivate: function () {
             scope.isLoading = false;
-            return scope.active = false;
+            return scope.setActive(false);
           },
           setActive: function (active) {
             clearInterval(scope.timer);

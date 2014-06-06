@@ -48,6 +48,7 @@ describe 'infinite-scroll', ->
 
 			spyOn @scope, 'load'
 
+			@scope.active = true
 			@scope.windowHeight = 1
 			@scope.tolerance = 0
 			@element[0].scrollHeight = 0
@@ -125,8 +126,6 @@ describe 'infinite-scroll', ->
 
 		it 'should set scope.isLoading to false', ->
 
-			console.log @scope
-
 			@scope.isLoading = true
 
 			do @scope.done
@@ -151,14 +150,14 @@ describe 'infinite-scroll', ->
 
 	describe '#deactivate', ->
 
-		it 'should set scope.active to false', ->
+		it 'should call #setActive with false', ->
 
-			@scope.active = true
+			spyOn @scope, 'setActive'
 
 			do @scope.deactivate
 
-			expect @scope.active
-			.toBe false
+			expect @scope.setActive
+			.toHaveBeenCalledWith false
 
 		it 'should set scope.isLoading to false', ->
 

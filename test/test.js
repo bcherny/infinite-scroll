@@ -29,6 +29,7 @@ describe('infinite-scroll', function() {
     });
     it('should call #load if the user scrolled to the bottom of the window', inject(function($window) {
       spyOn(this.scope, 'load');
+      this.scope.active = true;
       this.scope.windowHeight = 1;
       this.scope.tolerance = 0;
       this.element[0].scrollHeight = 0;
@@ -98,7 +99,6 @@ describe('infinite-scroll', function() {
   });
   describe('#done', function() {
     return it('should set scope.isLoading to false', function() {
-      console.log(this.scope);
       this.scope.isLoading = true;
       this.scope.done();
       return expect(this.scope.isLoading).toBe(false);
@@ -113,10 +113,10 @@ describe('infinite-scroll', function() {
     }));
   });
   describe('#deactivate', function() {
-    it('should set scope.active to false', function() {
-      this.scope.active = true;
+    it('should call #setActive with false', function() {
+      spyOn(this.scope, 'setActive');
       this.scope.deactivate();
-      return expect(this.scope.active).toBe(false);
+      return expect(this.scope.setActive).toHaveBeenCalledWith(false);
     });
     return it('should set scope.isLoading to false', function() {
       this.scope.isLoading = true;

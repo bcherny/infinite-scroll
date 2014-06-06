@@ -88,7 +88,7 @@ angular
 			# stop polling
 			deactivate: ->
 				scope.isLoading = false
-				scope.active = false
+				scope.setActive false
 
 			# fired when an element becomes visible or invisible
 			setActive: (active) ->
