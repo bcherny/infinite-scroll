@@ -1,4 +1,4 @@
-infinite-scroll
+infinite-scroll [![Build Status](https://travis-ci.org/turn/infinite-scroll.svg?branch=master)](https://travis-ci.org/turn/infinite-scroll)
 ===============
 
 High performance infinite scrolling for AngularJS.
