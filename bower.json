@@ -13,8 +13,11 @@
     "test",
     "src"
   ],
+  "dependencies": {
+    "angular": "1.0.8",
+    "jquery": "^1.11"
+    },
   "devDependencies": {
-    "jquery": "^1.11",
-    "angular": "1.0.8"
+    "angular-mocks": "1.0.8"
   }
 }
