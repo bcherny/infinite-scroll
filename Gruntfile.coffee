@@ -6,13 +6,15 @@ module.exports = (grunt) ->
 		'grunt-contrib-concat'
 		'grunt-contrib-jasmine'
 		'grunt-contrib-watch'
+		'grunt-coveralls'
 		'grunt-html2js'
 		'grunt-ngmin'
 	].forEach grunt.loadNpmTasks
 
 	# task sets
 	build = ['ngmin', 'html2js', 'concat', 'clean']
-	test = ['html2js', 'coffee', 'jasmine']
+	test = ['html2js', 'coffee', 'jasmine:unit']
+	testCoverage = ['html2js', 'coffee', 'jasmine:coverage']
 
 	# task defs
 	grunt.initConfig
@@ -39,7 +41,35 @@ module.exports = (grunt) ->
 				module: 'infiniteScrollTemplate'
 
 		jasmine:
-			test:
+			coverage:
+				src: [
+					'./src/<%= pkg.name %>.js'
+				]
+				options:
+					specs: ['./test/test.js']
+					template: require 'grunt-template-jasmine-istanbul'
+					templateOptions:
+						coverage: 'reports/lcov/lcov.json'
+						report: [
+							{
+								type: 'html'
+								options:
+									dir: 'reports/html'
+							}
+							{
+								type: 'lcov'
+								options:
+									dir: 'reports/lcov'
+							}
+						]
+					type: 'lcovonly'
+					vendor: [
+						'./bower_components/jquery/dist/jquery.js'
+						'./bower_components/angular/angular.js'
+						'./bower_components/angular-mocks/angular-mocks.js'
+						'./dist/template.js'
+					]
+			unit:
 				src: './src/<%= pkg.name %>.js'
 				options:
 					specs: './test/test.js'
@@ -72,3 +102,4 @@ module.exports = (grunt) ->
 
 	grunt.registerTask 'default', build
 	grunt.registerTask 'test', test
+	grunt.registerTask 'coverage', testCoverage
