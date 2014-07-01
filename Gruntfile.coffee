@@ -33,6 +33,12 @@ module.exports = (grunt) ->
 				src: ['./dist/template.js', './dist/<%= pkg.name %>.js']
 				dest: './dist/<%= pkg.name %>.js'
 
+		coveralls:
+			options:
+				force: true
+			main:
+				src: 'reports/lcov/lcov.info'
+
 		html2js:
 			main:
 				src: './src/*.html'
