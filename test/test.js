@@ -27,6 +27,11 @@ describe('infinite-scroll', function() {
       this.scope.active = false;
       return expect(this.scope.check()).toBe(false);
     });
+    it('should not return false if scope.active is undefined', function() {
+      this.scope.active = void 0;
+      spyOn(this.scope, 'load').andReturn(function() {});
+      return expect(this.scope.check()).not.toBe(false);
+    });
     it('should call #load if the user scrolled to the bottom of the window', inject(function($window) {
       spyOn(this.scope, 'load');
       this.scope.active = true;

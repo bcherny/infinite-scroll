@@ -44,6 +44,16 @@ describe 'infinite-scroll', ->
 			expect do @scope.check
 			.toBe false
 
+		it 'should not return false if scope.active is undefined', ->
+
+			@scope.active = undefined
+
+			spyOn @scope, 'load'
+			.andReturn ->
+
+			expect do @scope.check
+			.not.toBe false
+
 		it 'should call #load if the user scrolled to the bottom of the window', inject ($window) ->
 
 			spyOn @scope, 'load'
