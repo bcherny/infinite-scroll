@@ -7,7 +7,7 @@ angular
 
 	# how far from the bottom of the screen the user
 	# must be scrolled to trigger the callback (px)
-	tolerance: 0
+	tolerance: 100
 
 	# class to add to element when its infinite-scroll
 	# instance is disabled
