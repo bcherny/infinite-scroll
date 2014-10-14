@@ -43,6 +43,9 @@ angular
 		if not angular.isString scope.disabledClassName
 			scope.disabledClassName = infiniteScrollDefaults.disabledClassName 
 
+		# is true if the infinite scroll element is under a container other than 'body'
+		hasCustomizedContainer = !element.parent().is 'body'
+
 		angular.extend scope,
 
 			# query interval instance
@@ -51,11 +54,14 @@ angular
 			# flag for when a load is in progress
 			isLoading: false
 
-			# cache window height to prevent unnecessary DOM layouts, this is set by #measure
-			windowHeight: 0
+			# cache container height to prevent unnecessary DOM layouts, this is set by #measure
+			containerHeight: 0
 
 			# cache element left/top offset
 			elementOffset: do element.offset
+
+			# the container of infinite scroll directive
+			container: if hasCustomizedContainer then do element.parent else $window
 
 			# checks scroll distance, calling fn as needed
 			check: ->
@@ -63,9 +69,12 @@ angular
 				# return early if a load is already in progress
 				return false if scope.isLoading or scope.active is false
 
-				# load if the user is scrolled to the bottom of the window
-				if $window.pageYOffset + scope.windowHeight + scope.tolerance - element[0].scrollHeight - scope.elementOffset.top > 0
+				containerOffsetCompetitor = scope.containerHeight + scope.tolerance - element[0].scrollHeight - scope.elementOffset.top
 
+				# load if the user is scrolled to the bottom of the window
+				if !hasCustomizedContainer and scope.container.pageYOffset + containerOffsetCompetitor > 0
+					do scope.load
+				else if hasCustomizedContainer and (do scope.container.scrollTop) + containerOffsetCompetitor > 0
 					do scope.load
 
 			# load more data
@@ -83,7 +92,7 @@ angular
 
 			# measures window height on resize, for caching purposes
 			measure: ->
-				scope.windowHeight = $window.innerHeight
+				scope.containerHeight = if hasCustomizedContainer then do scope.container.innerHeight else scope.container.innerHeight 
 
 			# stop polling
 			deactivate: ->

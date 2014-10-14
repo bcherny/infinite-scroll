@@ -24,15 +24,21 @@
 			margin: 10px;
 		}
 
+		.container {
+			width: 300px;
+			height: 500px;
+			overflow: auto;
+		}
+
 	</style>
 </head>
 <body ng-app="demo" ng-controller="demo">
 
-	<div infinite-scroll="scroll()" infinite-scroll-active="active">
-		<div ng-repeat="item in items" style="background:rgb({{item.rgb}})"></div>
-	</div>
+		<div infinite-scroll="scroll()" infinite-scroll-active="active">
+			<div ng-repeat="item in items" style="background:rgb({{item.rgb}})"></div>
+		</div>
 
-	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.js"></script>
+ 	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 	<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.0.8/angular.js"></script>
 	<script src="../dist/infinite-scroll.js"></script>
 	<script>
