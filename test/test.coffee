@@ -11,10 +11,6 @@ describe 'infinite-scroll', ->
 			@scope.items = Array.apply null, Array 200
 			@scope.scroll = ->
 			@scope.isActive = true
-			# The (scope.fn).then raise issue but not cause test failure
-			# TODO: investigate this
-			@scope.fn = ->
-				then: ->
 
 			@element = angular.element """
 				<div infinite-scroll="scroll()">
@@ -22,251 +18,287 @@ describe 'infinite-scroll', ->
 				</div>
 			"""
 
+	beforeEach ->
+
+		@element.wrap angular.element """
+	        <body></body>
+	    """
+		(@$compile @element) @scope
+		do @scope.$apply
+		@scope = do @element.scope
+
+
 	###########################################################################
 	
-	@parentElementCustomized = angular.element """
-		<div class="container"></div>
-	"""
-	@parentElementBody = angular.element """
-		<body></body>
-	"""
-	testParents = [@parentElementCustomized, @parentElementBody]
 
-	for testParent in testParents
+	describe '#check', ->
 
-		beforeEach ->
+		it 'should return false if a load is already in progress', ->
 
-			@element.wrap testParent
+			@scope.isLoading = true
+
+			expect do @scope.check
+			.toBe false
+
+		it 'should return false if infinite-scroll is inactive', ->
+
+			@scope.active = false
+
+			expect do @scope.check
+			.toBe false
+
+		it 'should not return false if scope.active is undefined', ->
+
+			@scope.active = undefined
+
+			spyOn @scope, 'load'
+			.andReturn ->
+
+			expect do @scope.check
+			.not.toBe false
+
+		it 'should call #load if the user scrolled to the bottom of the window', inject ($window) ->
+
+			spyOn @scope, 'load'
+
+			@scope.active = true
+			@scope.containerHeight = 1
+			@scope.tolerance = 0
+			@element[0].scrollHeight = 0
+			@scope.elementOffset = top: 0
+
+			do @scope.check
+
+			do expect @scope.load
+			.toHaveBeenCalled
+
+		it 'should call #load if the user scrolled to the bottom of the container', ->
+
+			@element.wrap angular.element """
+				<div class="container"></div>
+			"""
 			(@$compile @element) @scope
 			do @scope.$apply
 			@scope = do @element.scope
 
-		describe '#check', ->
+			spyOn @scope, 'load'
 
-			it 'should return false if a load is already in progress', ->
+			@scope.active = true
+			@scope.containerHeight = 1
+			@scope.tolerance = 0
+			@element[0].scrollHeight = 0
+			@scope.elementOffset = top: 0
 
-				@scope.isLoading = true
+			do @scope.check
 
-				expect do @scope.check
-				.toBe false
+			do expect @scope.load
+			.toHaveBeenCalled
 
-			it 'should return false if infinite-scroll is inactive', ->
+		it 'should not call #load otherwise', ->
 
-				@scope.active = false
+			spyOn @scope, 'load'
 
-				expect do @scope.check
-				.toBe false
+			@scope.containerHeight = 0
+			@scope.tolerance = 0 
+			@element[0].scrollHeight = 0
+			@scope.elementOffset = top: 0
 
-			it 'should not return false if scope.active is undefined', ->
+			do @scope.check
 
-				@scope.active = undefined
+			do expect @scope.load
+			.not.toHaveBeenCalled
 
-				spyOn @scope, 'load'
-				.andReturn ->
+		it 'should not call #load otherwise with container', ->
+			
+			@element.wrap angular.element """
+				<div class="container"></div>
+			"""
+			(@$compile @element) @scope
+			do @scope.$apply
+			@scope = do @element.scope
 
-				expect do @scope.check
-				.not.toBe false
+			spyOn @scope, 'load'
 
-			it 'should call #load if the user scrolled to the bottom of the window', inject ($window) ->
+			@scope.containerHeight = 0
+			@scope.tolerance = 0
+			@element[0].scrollHeight = 0
+			@scope.elementOffset = top: 0
 
-				spyOn @scope, 'load'
+			do @scope.check
 
-				@scope.active = true
-				@scope.containerHeight = 1
-				@scope.tolerance = 0
-				@element[0].scrollHeight = 0
-				@scope.elementOffset = top: 0
+			do expect @scope.load
+			.not.toHaveBeenCalled
 
-				do @scope.check
 
-				do expect @scope.load
-				.toHaveBeenCalled
+	describe '#load', ->
 
+		it 'should set scope.isLoading to true', ->
 
-			it 'should not call #load otherwise', ->
+			@scope.isLoading = false
+			@scope.fn = -> then: ->
 
-				spyOn @scope, 'load'
+			do @scope.load
 
-				@scope.containerHeight = 0
-				@scope.tolerance = 0
-				@element[0].scrollHeight = 0
-				@scope.elementOffset = top: 0
+			expect @scope.isLoading
+			.toBe true
 
-				do @scope.check
+		it 'should call #fn with no arguments', ->
 
-				do expect @scope.load
-				.not.toHaveBeenCalled
+			@scope.fn = -> then: ->
 
+			do spyOn @scope, 'fn'
+			.andCallThrough
 
-		describe '#load', ->
+			do @scope.load
 
-			it 'should set scope.isLoading to true', ->
+			do expect @scope.fn
+			.toHaveBeenCalledWith
 
-				@scope.isLoading = false
-				@scope.fn = -> then: ->
+		it 'should call #done when #fn is resolved', ->
 
-				do @scope.load
+			spyOn @scope, 'done'
 
-				expect @scope.isLoading
-				.toBe true
+			@scope.fn = -> then: (good) -> do good
 
-			it 'should call #fn with no arguments', ->
+			do @scope.load
 
-				@scope.fn = -> then: ->
+			do expect @scope.done
+			.toHaveBeenCalled
 
-				do spyOn @scope, 'fn'
-				.andCallThrough
+		it 'should call #deactivate when #fn is rejected', ->
 
-				do @scope.load
+			spyOn @scope, 'deactivate'
 
-				do expect @scope.fn
-				.toHaveBeenCalledWith
+			@scope.fn = -> then: (good, bad) -> do bad
 
-			it 'should call #done when #fn is resolved', ->
+			do @scope.load
 
-				spyOn @scope, 'done'
+			do expect @scope.deactivate
+			.toHaveBeenCalled
 
-				@scope.fn = -> then: (good) -> do good
 
-				do @scope.load
+	describe '#done', ->
 
-				do expect @scope.done
-				.toHaveBeenCalled
+		it 'should set scope.isLoading to false', ->
 
-			it 'should call #deactivate when #fn is rejected', ->
+			@scope.isLoading = true
 
-				spyOn @scope, 'deactivate'
+			do @scope.done
 
-				@scope.fn = -> then: (good, bad) -> do bad
+			expect @scope.isLoading
+			.toBe false
 
-				do @scope.load
 
-				do expect @scope.deactivate
-				.toHaveBeenCalled
+	describe '#measure', ->
 
+		it 'should set scope.containerHeight to the window height', inject ($window) ->
 
-		describe '#done', ->
+			@scope.containerHeight = 0
 
-			it 'should set scope.isLoading to false', ->
+			$window.innerHeight = 100
 
-				@scope.isLoading = true
+			do @scope.measure
 
-				do @scope.done
+			expect @scope.containerHeight
+			.toBe $window.innerHeight
 
-				expect @scope.isLoading
-				.toBe false
 
+	describe '#deactivate', ->
 
-		describe '#measure', ->
+		it 'should call #setActive with false', ->
 
-			it 'should set scope.containerHeight to the window height', inject ($window) ->
+			spyOn @scope, 'setActive'
 
-				@scope.containerHeight = 0
+			do @scope.deactivate
 
-				$window.innerHeight = 100
+			expect @scope.setActive
+			.toHaveBeenCalledWith false
 
-				do @scope.measure
+		it 'should set scope.isLoading to false', ->
 
-				expect @scope.containerHeight
-				.toBe $window.innerHeight
+			@scope.isLoading = true
 
+			do @scope.deactivate
 
-		describe '#deactivate', ->
+			expect @scope.isLoading
+			.toBe false
 
-			it 'should call #setActive with false', ->
 
-				spyOn @scope, 'setActive'
+	describe '#setActive', ->
 
-				do @scope.deactivate
+		it 'should clear the timer', ->
 
-				expect @scope.setActive
-				.toHaveBeenCalledWith false
+			spyOn window, 'clearInterval'
 
-			it 'should set scope.isLoading to false', ->
+			@scope.timer = 42
 
-				@scope.isLoading = true
+			do @scope.setActive
 
-				do @scope.deactivate
+			expect window.clearInterval
+			.toHaveBeenCalledWith @scope.timer
 
-				expect @scope.isLoading
-				.toBe false
+		it 'should not set a new timer when passed a falsey argument', ->
 
+			@scope.timer = null
 
-		describe '#setActive', ->
+			@scope.setActive false
 
-			it 'should clear the timer', ->
+			expect @scope.timer
+			.toBe null
 
-				spyOn window, 'clearInterval'
+			@scope.setActive undefined
 
-				@scope.timer = 42
+			expect @scope.timer
+			.toBe null
 
-				do @scope.setActive
+			@scope.setActive null
 
-				expect window.clearInterval
-				.toHaveBeenCalledWith @scope.timer
+			expect @scope.timer
+			.toBe null
 
-			it 'should not set a new timer when passed a falsey argument', ->
+		it 'should set a new timer when passed a truthy argument', ->
 
-				@scope.timer = null
+			do spyOn window, 'setInterval'
+			.andCallThrough
 
-				@scope.setActive false
+			@scope.timer = null
+			@scope.check = ->
+			@scope.interval = 100
 
-				expect @scope.timer
-				.toBe null
+			@scope.setActive 42
 
-				@scope.setActive undefined
+			# timer should have been set (setInterval returns a numerical timer ID)
+			expect typeof @scope.timer
+			.toBe 'number'
 
-				expect @scope.timer
-				.toBe null
+			# setInterval should have been called
+			expect window.setInterval
+			.toHaveBeenCalledWith @scope.check, @scope.interval
 
-				@scope.setActive null
+		it 'should remove the disabled class if set to active', ->
 
-				expect @scope.timer
-				.toBe null
+			@scope.disabledClassName = 'foo'
 
-			it 'should set a new timer when passed a truthy argument', ->
+			@element.addClass @scope.disabledClassName
 
-				do spyOn window, 'setInterval'
-				.andCallThrough
+			expect @element.hasClass @scope.disabledClassName
+			.toBe true
 
-				@scope.timer = null
-				@scope.check = ->
-				@scope.interval = 100
+			@scope.setActive true
 
-				@scope.setActive 42
+			expect @element.hasClass @scope.disabledClassName
+			.toBe false
 
-				# timer should have been set (setInterval returns a numerical timer ID)
-				expect typeof @scope.timer
-				.toBe 'number'
+		it 'should add the disabled class if set to inactive', ->
 
-				# setInterval should have been called
-				expect window.setInterval
-				.toHaveBeenCalledWith @scope.check, @scope.interval
+			@scope.disabledClassName = 'foo'
 
-			it 'should remove the disabled class if set to active', ->
+			@element.removeClass @scope.disabledClassName
 
-				@scope.disabledClassName = 'foo'
+			expect @element.hasClass @scope.disabledClassName
+			.toBe false
 
-				@element.addClass @scope.disabledClassName
+			@scope.setActive false
 
-				expect @element.hasClass @scope.disabledClassName
-				.toBe true
-
-				@scope.setActive true
-
-				expect @element.hasClass @scope.disabledClassName
-				.toBe false
-
-			it 'should add the disabled class if set to inactive', ->
-
-				@scope.disabledClassName = 'foo'
-
-				@element.removeClass @scope.disabledClassName
-
-				expect @element.hasClass @scope.disabledClassName
-				.toBe false
-
-				@scope.setActive false
-
-				expect @element.hasClass @scope.disabledClassName
-				.toBe true
+			expect @element.hasClass @scope.disabledClassName
+			.toBe true

@@ -43,7 +43,7 @@ angular.module('turn/infiniteScroll', ['infiniteScrollTemplate']).constant('infi
             return false;
           }
           containerOffsetCompetitor = scope.containerHeight + scope.tolerance - element[0].scrollHeight - scope.elementOffset.top;
-          if ((!hasCustomizedContainer && scope.container.pageYOffset + containerOffsetCompetitor > 0) || (hasCustomizedContainer && (scope.container.scrollTop()) + containerOffsetCompetitor > 0)) {
+          if ((!hasCustomizedContainer && (scope.container.pageYOffset + containerOffsetCompetitor > 0)) || (hasCustomizedContainer && ((scope.container.scrollTop()) + containerOffsetCompetitor > 0))) {
             return scope.load();
           }
         },
