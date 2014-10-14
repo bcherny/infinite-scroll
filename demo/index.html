@@ -34,9 +34,11 @@
 </head>
 <body ng-app="demo" ng-controller="demo">
 
+	<div class="container">
 		<div infinite-scroll="scroll()" infinite-scroll-active="active">
 			<div ng-repeat="item in items" style="background:rgb({{item.rgb}})"></div>
 		</div>
+	</div>
 
  	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 	<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.0.8/angular.js"></script>

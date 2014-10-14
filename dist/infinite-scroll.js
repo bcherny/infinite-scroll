@@ -40,7 +40,7 @@ angular.module('turn/infiniteScroll', ['infiniteScrollTemplate']).constant('infi
         if (!angular.isString(scope.disabledClassName)) {
           scope.disabledClassName = infiniteScrollDefaults.disabledClassName;
         }
-        hasCustomizedContainer = !element.parent().is('body');
+        hasCustomizedContainer = element.parent().length > 0 && !element.parent().is('body');
         angular.extend(scope, {
           timer: null,
           isLoading: false,
@@ -53,9 +53,7 @@ angular.module('turn/infiniteScroll', ['infiniteScrollTemplate']).constant('infi
               return false;
             }
             containerOffsetCompetitor = scope.containerHeight + scope.tolerance - element[0].scrollHeight - scope.elementOffset.top;
-            if (!hasCustomizedContainer && scope.container.pageYOffset + containerOffsetCompetitor > 0) {
-              return scope.load();
-            } else if (hasCustomizedContainer && scope.container.scrollTop() + containerOffsetCompetitor > 0) {
+            if (!hasCustomizedContainer && scope.container.pageYOffset + containerOffsetCompetitor > 0 || hasCustomizedContainer && scope.container.scrollTop() + containerOffsetCompetitor > 0) {
               return scope.load();
             }
           },

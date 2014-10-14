@@ -44,7 +44,7 @@ angular
 			scope.disabledClassName = infiniteScrollDefaults.disabledClassName 
 
 		# is true if the infinite scroll element is under a container other than 'body'
-		hasCustomizedContainer = !element.parent().is 'body'
+		hasCustomizedContainer = (element.parent().length > 0) and (!element.parent().is 'body')
 
 		angular.extend scope,
 
@@ -72,10 +72,7 @@ angular
 				containerOffsetCompetitor = scope.containerHeight + scope.tolerance - element[0].scrollHeight - scope.elementOffset.top
 
 				# load if the user is scrolled to the bottom of the window
-				if !hasCustomizedContainer and scope.container.pageYOffset + containerOffsetCompetitor > 0
-					do scope.load
-				else if hasCustomizedContainer and (do scope.container.scrollTop) + containerOffsetCompetitor > 0
-					do scope.load
+				do scope.load if (!hasCustomizedContainer and scope.container.pageYOffset + containerOffsetCompetitor > 0) or (hasCustomizedContainer and (do scope.container.scrollTop) + containerOffsetCompetitor > 0)
 
 			# load more data
 			load: ->
