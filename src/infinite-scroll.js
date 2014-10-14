@@ -18,6 +18,7 @@ angular.module('turn/infiniteScroll', ['infiniteScrollTemplate']).constant('infi
     },
     link: function(scope, element, attrs) {
       var hasCustomizedContainer;
+      window.myelement = element;
       if (!angular.isFunction(scope.fn)) {
         throw new TypeError("infinite-scroll expects scroll function to be defined on scope");
       }
@@ -30,20 +31,20 @@ angular.module('turn/infiniteScroll', ['infiniteScrollTemplate']).constant('infi
       if (!angular.isString(scope.disabledClassName)) {
         scope.disabledClassName = infiniteScrollDefaults.disabledClassName;
       }
-      hasCustomizedContainer = (element.parent().length > 0) && (!element.parent().is('body'));
+      hasCustomizedContainer = (element.parent().length > 0) && !(element.parent()[0].tagName === 'BODY');
       angular.extend(scope, {
         timer: null,
         isLoading: false,
         containerHeight: 0,
-        elementOffset: element.offset(),
-        container: hasCustomizedContainer ? element.parent() : $window,
+        elementOffsetTop: element[0].offsetTop,
+        container: hasCustomizedContainer ? (element.parent())[0] : $window,
         check: function() {
           var containerOffsetCompetitor;
           if (scope.isLoading || scope.active === false) {
             return false;
           }
-          containerOffsetCompetitor = scope.containerHeight + scope.tolerance - element[0].scrollHeight - scope.elementOffset.top;
-          if ((!hasCustomizedContainer && (scope.container.pageYOffset + containerOffsetCompetitor > 0)) || (hasCustomizedContainer && ((scope.container.scrollTop()) + containerOffsetCompetitor > 0))) {
+          containerOffsetCompetitor = scope.containerHeight + scope.tolerance - element[0].scrollHeight - scope.elementOffsetTop;
+          if ((!hasCustomizedContainer && (scope.container.pageYOffset + containerOffsetCompetitor > 0)) || (hasCustomizedContainer && (scope.container.scrollTop + containerOffsetCompetitor > 0))) {
             return scope.load();
           }
         },
@@ -55,7 +56,7 @@ angular.module('turn/infiniteScroll', ['infiniteScrollTemplate']).constant('infi
           return scope.isLoading = false;
         },
         measure: function() {
-          return scope.containerHeight = hasCustomizedContainer ? scope.container.innerHeight() : scope.container.innerHeight;
+          return scope.containerHeight = hasCustomizedContainer ? scope.container.offsetHeight : scope.container.innerHeight;
         },
         deactivate: function() {
           scope.isLoading = false;

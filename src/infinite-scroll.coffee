@@ -29,6 +29,7 @@ angular
 
 	link: (scope, element, attrs) ->
 
+		window.myelement = element
 		# set fn
 		if not angular.isFunction scope.fn
 			throw new TypeError "infinite-scroll expects scroll function to be defined on scope"
@@ -44,7 +45,7 @@ angular
 			scope.disabledClassName = infiniteScrollDefaults.disabledClassName 
 
 		# is true if the infinite scroll element is under a container other than 'body'
-		hasCustomizedContainer = (element.parent().length > 0) and (!element.parent().is 'body')
+		hasCustomizedContainer = (element.parent().length > 0) and !(element.parent()[0].tagName == 'BODY')
 
 		angular.extend scope,
 
@@ -58,10 +59,10 @@ angular
 			containerHeight: 0
 
 			# cache element left/top offset
-			elementOffset: do element.offset
+			elementOffsetTop: element[0].offsetTop
 
 			# the container of infinite scroll directive
-			container: if hasCustomizedContainer then do element.parent else $window
+			container: if hasCustomizedContainer then (do element.parent)[0] else $window
 
 			# checks scroll distance, calling fn as needed
 			check: ->
@@ -69,10 +70,10 @@ angular
 				# return early if a load is already in progress
 				return false if scope.isLoading or scope.active is false
 
-				containerOffsetCompetitor = scope.containerHeight + scope.tolerance - element[0].scrollHeight - scope.elementOffset.top
+				containerOffsetCompetitor = scope.containerHeight + scope.tolerance - element[0].scrollHeight - scope.elementOffsetTop
 
 				# load if the user is scrolled to the bottom of the window
-				do scope.load if (!hasCustomizedContainer and (scope.container.pageYOffset + containerOffsetCompetitor > 0)) or (hasCustomizedContainer and ((do scope.container.scrollTop) + containerOffsetCompetitor > 0))
+				do scope.load if (!hasCustomizedContainer and (scope.container.pageYOffset + containerOffsetCompetitor > 0)) or (hasCustomizedContainer and (scope.container.scrollTop + containerOffsetCompetitor > 0))
 
 			# load more data
 			load: ->
@@ -89,7 +90,7 @@ angular
 
 			# measures window height on resize, for caching purposes
 			measure: ->
-				scope.containerHeight = if hasCustomizedContainer then do scope.container.innerHeight else scope.container.innerHeight 
+				scope.containerHeight = if hasCustomizedContainer then scope.container.offsetHeight else scope.container.innerHeight 
 
 			# stop polling
 			deactivate: ->
