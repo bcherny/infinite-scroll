@@ -61,7 +61,7 @@ angular
 			elementOffset: do element.offset
 
 			# the container of infinite scroll directive
-			container: if hasCustomizedContainer then do element.parent else $window
+			container: if hasCustomizedContainer then do element.parent else angular.element $window
 
 			# checks scroll distance, calling fn as needed
 			check: ->
@@ -72,7 +72,7 @@ angular
 				containerOffsetCompetitor = scope.containerHeight + scope.tolerance - element[0].scrollHeight - scope.elementOffset.top
 
 				# load if the user is scrolled to the bottom of the window
-				do scope.load if (!hasCustomizedContainer and (scope.container.pageYOffset + containerOffsetCompetitor > 0)) or (hasCustomizedContainer and ((do scope.container.scrollTop) + containerOffsetCompetitor > 0))
+				do scope.load if ((do scope.container.scrollTop) + containerOffsetCompetitor > 0)
 
 			# load more data
 			load: ->
@@ -89,7 +89,7 @@ angular
 
 			# measures window height on resize, for caching purposes
 			measure: ->
-				scope.containerHeight = if hasCustomizedContainer then do scope.container.innerHeight else scope.container.innerHeight 
+				scope.containerHeight = do scope.container.innerHeight
 
 			# stop polling
 			deactivate: ->

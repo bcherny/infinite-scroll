@@ -46,14 +46,14 @@ angular.module('turn/infiniteScroll', ['infiniteScrollTemplate']).constant('infi
           isLoading: false,
           containerHeight: 0,
           elementOffset: element.offset(),
-          container: hasCustomizedContainer ? element.parent() : $window,
+          container: hasCustomizedContainer ? element.parent() : angular.element($window),
           check: function () {
             var containerOffsetCompetitor;
             if (scope.isLoading || scope.active === false) {
               return false;
             }
             containerOffsetCompetitor = scope.containerHeight + scope.tolerance - element[0].scrollHeight - scope.elementOffset.top;
-            if (!hasCustomizedContainer && scope.container.pageYOffset + containerOffsetCompetitor > 0 || hasCustomizedContainer && scope.container.scrollTop() + containerOffsetCompetitor > 0) {
+            if (scope.container.scrollTop() + containerOffsetCompetitor > 0) {
               return scope.load();
             }
           },
@@ -65,7 +65,7 @@ angular.module('turn/infiniteScroll', ['infiniteScrollTemplate']).constant('infi
             return scope.isLoading = false;
           },
           measure: function () {
-            return scope.containerHeight = hasCustomizedContainer ? scope.container.innerHeight() : scope.container.innerHeight;
+            return scope.containerHeight = scope.container.innerHeight();
           },
           deactivate: function () {
             scope.isLoading = false;

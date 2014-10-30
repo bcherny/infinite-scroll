@@ -144,7 +144,7 @@ describe('infinite-scroll', function() {
   describe('#measure', function() {
     return it('should set scope.containerHeight to the window height', inject(function($window) {
       this.scope.containerHeight = 0;
-      $window.innerHeight = 100;
+      (angular.element($window)).innerHeight = 100;
       this.scope.measure();
       return expect(this.scope.containerHeight).toBe($window.innerHeight);
     }));

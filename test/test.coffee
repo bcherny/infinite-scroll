@@ -195,7 +195,7 @@ describe 'infinite-scroll', ->
 
 			@scope.containerHeight = 0
 
-			$window.innerHeight = 100
+			(angular.element $window).innerHeight = 100
 
 			do @scope.measure
 
