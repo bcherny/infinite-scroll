@@ -89,6 +89,13 @@ function Controller ($scope) {
 
 <!-- set infinite scroll className to "inactive" when infinite-scroll is disabled -->
 <div infinite-scroll="callbackFn5" infinite-scroll-disabled-class="inactive"></div>
+
+<!-- set infinite scroll to use custom specific container -->
+<div infinite-scroll="callbackFn6" infinite-scroll-container="containerElement"></div>
+
+<!-- set infinite scroll to use parent element as local container -->
+<div infinite-scroll="callbackFn7" infinite-scroll-is-local="true"></div>
+
 ```
 
 ## Todo

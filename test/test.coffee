@@ -20,9 +20,6 @@ describe 'infinite-scroll', ->
 
 	beforeEach ->
 
-		@element.wrap angular.element """
-	        <body></body>
-	    """
 		(@$compile @element) @scope
 		do @scope.$apply
 		@scope = do @element.scope
@@ -110,8 +107,12 @@ describe 'infinite-scroll', ->
 
 		it 'should not call #load otherwise with container', ->
 			
-			@element.wrap angular.element """
-				<div class="container"></div>
+			@element = angular.element """
+				<div class="container">
+					<div infinite-scroll="scroll()" infinite-scroll-is-local="true">
+						<div ng-repeat="item in items" style="height:100px"></div>
+					</div>
+				</div>
 			"""
 			(@$compile @element) @scope
 			do @scope.$apply

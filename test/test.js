@@ -14,7 +14,6 @@ describe('infinite-scroll', function() {
     })(this));
   });
   beforeEach(function() {
-    this.element.wrap(angular.element("<body></body>"));
     (this.$compile(this.element))(this.scope);
     this.scope.$apply();
     return this.scope = this.element.scope();
@@ -73,7 +72,7 @@ describe('infinite-scroll', function() {
       return expect(this.scope.load).not.toHaveBeenCalled();
     });
     return it('should not call #load otherwise with container', function() {
-      this.element.wrap(angular.element("<div class=\"container\"></div>"));
+      this.element = angular.element("<div class=\"container\">\n	<div infinite-scroll=\"scroll()\" infinite-scroll-is-local=\"true\">\n		<div ng-repeat=\"item in items\" style=\"height:100px\"></div>\n	</div>\n</div>");
       (this.$compile(this.element))(this.scope);
       this.scope.$apply();
       this.scope = this.element.scope();

@@ -26,10 +26,13 @@ angular
 		tolerance: '&infiniteScrollTolerance'
 		active: '=infiniteScrollActive'
 		disabledClassName: '&infiniteScrollDisabledClass'
+		# container element custimized by user
+		containerElement: '&infiniteScrollContainer'
+		# the scroll is local if the parent element is used for scrolling
+		isLocal: '&infiniteScrollIsLocal'
 
 	link: (scope, element, attrs) ->
 
-		window.myelement = element
 		# set fn
 		if not angular.isFunction scope.fn
 			throw new TypeError "infinite-scroll expects scroll function to be defined on scope"
@@ -45,7 +48,10 @@ angular
 			scope.disabledClassName = infiniteScrollDefaults.disabledClassName 
 
 		# is true if the infinite scroll element is under a container other than 'body'
-		hasCustomizedContainer = (element.parent().length > 0) and !(element.parent()[0].tagName == 'BODY')
+		hasCustomizedContainer = angular.isDefined do scope.containerElement
+
+		# the scroll effect is global if it is not local nor on a specific container element
+		isGlobal = not hasCustomizedContainer and not do scope.isLocal
 
 		angular.extend scope,
 
@@ -62,7 +68,9 @@ angular
 			elementOffsetTop: element[0].offsetTop
 
 			# the container of infinite scroll directive
-			container: if hasCustomizedContainer then (do element.parent)[0] else $window
+			container: if hasCustomizedContainer then (do scope.containerElement)[0]
+			else if do scope.isLocal then (do element.parent)[0] 
+			else $window
 
 			# checks scroll distance, calling fn as needed
 			check: ->
@@ -70,10 +78,16 @@ angular
 				# return early if a load is already in progress
 				return false if scope.isLoading or scope.active is false
 
+				# This is the competitor factor that is calculated to match container's scroll offset
+				# This value is got by sum up the container's height and tolerance given by user
+				# then subtract the total loaded, scroll-able height, and the offset of container
 				containerOffsetCompetitor = scope.containerHeight + scope.tolerance - element[0].scrollHeight - scope.elementOffsetTop
 
 				# load if the user is scrolled to the bottom of the window
-				do scope.load if (!hasCustomizedContainer and (scope.container.pageYOffset + containerOffsetCompetitor > 0)) or (hasCustomizedContainer and (scope.container.scrollTop + containerOffsetCompetitor > 0))
+				# The second part of each if-else condistion is the result of decision if we need to load more data
+				# Note that for customized container, we need to rebate the scope.elementOffsetTop as this value
+				# is the total offset on the top
+				do scope.load if (isGlobal and (scope.container.pageYOffset + containerOffsetCompetitor > 0)) or (not isGlobal and (scope.container.scrollTop + containerOffsetCompetitor + scope.elementOffsetTop > 0))
 
 			# load more data
 			load: ->
@@ -90,7 +104,7 @@ angular
 
 			# measures window height on resize, for caching purposes
 			measure: ->
-				scope.containerHeight = if hasCustomizedContainer then scope.container.offsetHeight else scope.container.innerHeight 
+				scope.containerHeight = if isGlobal then scope.container.innerHeight else scope.container.offsetHeight 
 
 			# stop polling
 			deactivate: ->
