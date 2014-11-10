@@ -47,12 +47,6 @@ angular
 		if not angular.isString scope.disabledClassName
 			scope.disabledClassName = infiniteScrollDefaults.disabledClassName 
 
-		# is true if the infinite scroll element is under a container other than 'body'
-		hasCustomizedContainer = angular.isDefined do scope.containerElement
-
-		# the scroll effect is global if it is not local nor on a specific container element
-		isGlobal = not hasCustomizedContainer and not do scope.isLocal
-
 		angular.extend scope,
 
 			# query interval instance
@@ -68,7 +62,7 @@ angular
 			elementOffsetTop: element[0].offsetTop
 
 			# the container of infinite scroll directive
-			container: if hasCustomizedContainer then (do scope.containerElement)[0]
+			container: if (angular.isDefined do scope.containerElement) then (do scope.containerElement)[0]
 			else if do scope.isLocal then (do element.parent)[0] 
 			else $window
 
@@ -84,10 +78,13 @@ angular
 				containerOffsetCompetitor = scope.containerHeight + scope.tolerance - element[0].scrollHeight - scope.elementOffsetTop
 
 				# load if the user is scrolled to the bottom of the window
-				# The second part of each if-else condistion is the result of decision if we need to load more data
+				# scrollTop + containerOffsetCompetitor is the result of decision if we need to load more data
 				# Note that for customized container, we need to rebate the scope.elementOffsetTop as this value
 				# is the total offset on the top
-				do scope.load if (isGlobal and (scope.container.pageYOffset + containerOffsetCompetitor > 0)) or (not isGlobal and (scope.container.scrollTop + containerOffsetCompetitor + scope.elementOffsetTop > 0))
+				scrollTop = if (not (angular.isDefined do scope.containerElement) and not do scope.isLocal) then scope.container.pageYOffset
+				else scope.container.scrollTop + scope.elementOffsetTop
+
+				do scope.load if (scrollTop + containerOffsetCompetitor > 0)
 
 			# load more data
 			load: ->
@@ -104,7 +101,8 @@ angular
 
 			# measures window height on resize, for caching purposes
 			measure: ->
-				scope.containerHeight = if isGlobal then scope.container.innerHeight else scope.container.offsetHeight 
+				scope.containerHeight = if (not (angular.isDefined do scope.containerElement) and not do scope.isLocal) then scope.container.innerHeight 
+				else scope.container.offsetHeight 
 
 			# stop polling
 			deactivate: ->

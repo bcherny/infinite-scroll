@@ -29,7 +29,6 @@ angular.module('turn/infiniteScroll', ['infiniteScrollTemplate']).constant('infi
         isLocal: '&infiniteScrollIsLocal'
       },
       link: function (scope, element, attrs) {
-        var hasCustomizedContainer, isGlobal;
         if (!angular.isFunction(scope.fn)) {
           throw new TypeError('infinite-scroll expects scroll function to be defined on scope');
         }
@@ -42,21 +41,20 @@ angular.module('turn/infiniteScroll', ['infiniteScrollTemplate']).constant('infi
         if (!angular.isString(scope.disabledClassName)) {
           scope.disabledClassName = infiniteScrollDefaults.disabledClassName;
         }
-        hasCustomizedContainer = angular.isDefined(scope.containerElement());
-        isGlobal = !hasCustomizedContainer && !scope.isLocal();
         angular.extend(scope, {
           timer: null,
           isLoading: false,
           containerHeight: 0,
           elementOffsetTop: element[0].offsetTop,
-          container: hasCustomizedContainer ? scope.containerElement()[0] : scope.isLocal() ? element.parent()[0] : $window,
+          container: angular.isDefined(scope.containerElement()) ? scope.containerElement()[0] : scope.isLocal() ? element.parent()[0] : $window,
           check: function () {
-            var containerOffsetCompetitor;
+            var containerOffsetCompetitor, scrollTop;
             if (scope.isLoading || scope.active === false) {
               return false;
             }
             containerOffsetCompetitor = scope.containerHeight + scope.tolerance - element[0].scrollHeight - scope.elementOffsetTop;
-            if (isGlobal && scope.container.pageYOffset + containerOffsetCompetitor > 0 || !isGlobal && scope.container.scrollTop + containerOffsetCompetitor + scope.elementOffsetTop > 0) {
+            scrollTop = !angular.isDefined(scope.containerElement()) && !scope.isLocal() ? scope.container.pageYOffset : scope.container.scrollTop + scope.elementOffsetTop;
+            if (scrollTop + containerOffsetCompetitor > 0) {
               return scope.load();
             }
           },
@@ -68,7 +66,7 @@ angular.module('turn/infiniteScroll', ['infiniteScrollTemplate']).constant('infi
             return scope.isLoading = false;
           },
           measure: function () {
-            return scope.containerHeight = isGlobal ? scope.container.innerHeight : scope.container.offsetHeight;
+            return scope.containerHeight = !angular.isDefined(scope.containerElement()) && !scope.isLocal() ? scope.container.innerHeight : scope.container.offsetHeight;
           },
           deactivate: function () {
             scope.isLoading = false;
