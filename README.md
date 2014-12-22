@@ -1,5 +1,4 @@
-infinite-scroll [![Build Status](https://travis-ci.org/bcherny/infinite-scroll.svg?branch=master)](https://travis-ci.org/bcherny/infinite-scroll) [![Coverage Status](https://img.shields.io/coveralls/bcherny/infinite-scroll.svg)](https://coveralls.io/r/bcherny/infinite-scroll)
-===============
+# infinite-scroll [![Build Status](https://travis-ci.org/bcherny/infinite-scroll.svg?branch=master)](https://travis-ci.org/bcherny/infinite-scroll) [![Coverage Status](https://img.shields.io/coveralls/bcherny/infinite-scroll.svg)](https://coveralls.io/r/bcherny/infinite-scroll)
 
 High performance infinite scrolling for AngularJS.
 
@@ -23,7 +22,7 @@ Because [ngInfiniteScroll](https://github.com/BinaryMuse/ngInfiniteScroll) liste
 ## Installation
 
 ```bash
-bower i -S https://github.com/turn/infinite-scroll.git
+bower i -S https://github.com/bcherny/infinite-scroll.git
 ```
 
 ## Usage
