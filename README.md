@@ -1,4 +1,4 @@
-infinite-scroll [![Build Status](https://travis-ci.org/turn/infinite-scroll.svg?branch=master)](https://travis-ci.org/turn/infinite-scroll) [![Coverage Status](https://img.shields.io/coveralls/turn/infinite-scroll.svg)](https://coveralls.io/r/turn/infinite-scroll)
+infinite-scroll [![Build Status](https://travis-ci.org/bcherny/infinite-scroll.svg?branch=master)](https://travis-ci.org/bcherny/infinite-scroll) [![Coverage Status](https://img.shields.io/coveralls/bcherny/infinite-scroll.svg)](https://coveralls.io/r/bcherny/infinite-scroll)
 ===============
 
 High performance infinite scrolling for AngularJS.
@@ -85,7 +85,7 @@ function Controller ($scope) {
 ## License
 
 ```
-Copyright 2014 Turn Inc.
+Copyright 2014 Boris Cherny.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

@@ -1,6 +1,6 @@
 {
   "name": "infinite-scroll",
-  "version": "0.1.4",
+  "version": "0.1.6",
   "description": "High performance infinite scrolling for AngularJS",
   "main": "dist/infinite-scroll.js",
   "scripts": {
