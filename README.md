@@ -1,4 +1,7 @@
-# infinite-scroll [![Build Status](https://travis-ci.org/bcherny/infinite-scroll.svg?branch=master)](https://travis-ci.org/bcherny/infinite-scroll) [![Coverage Status](https://img.shields.io/coveralls/bcherny/infinite-scroll.svg)](https://coveralls.io/r/bcherny/infinite-scroll)
+# infinite-scroll [![Build Status][build]](https://travis-ci.org/bcherny/infinite-scroll) [![Coverage Status][coverage]](https://coveralls.io/r/bcherny/infinite-scroll)
+
+[build]: https://img.shields.io/travis/bcherny/infinite-scroll.svg?branch=master&style=flat-square
+[coverage]: http://img.shields.io/coveralls/bcherny/infinite-scroll.svg?branch=master&style=flat-square
 
 High performance infinite scrolling for AngularJS.
 
