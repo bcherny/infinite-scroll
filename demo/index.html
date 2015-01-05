@@ -24,15 +24,41 @@
 			margin: 10px;
 		}
 
+		.container1, .container2, .container3 {
+			width: 300px;
+			height: 200px;
+			padding: 30px;
+			overflow: auto;
+		}
+
 	</style>
 </head>
 <body ng-app="demo" ng-controller="demo">
+	
+	<div class="container3"></div>
 
-	<div infinite-scroll="scroll()" infinite-scroll-active="active">
-		<div ng-repeat="item in items" style="background:rgb({{item.rgb}})"></div>
+	<div class="container1">
+		<div infinite-scroll="scroll()" 
+			infinite-scroll-active="active"
+			infinite-scroll-container="containerElement">
+			<div ng-repeat="item in items" style="background:rgb({{item.rgb}})"></div>
+		</div>
 	</div>
 
-	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.js"></script>
+	<div class="container2">
+		<div infinite-scroll="scroll()" 
+			infinite-scroll-active="active"
+			infinite-scroll-is-local="true">
+			<div ng-repeat="item in items" style="background:rgb({{item.rgb}})"></div>
+		</div>
+	</div>
+
+	<div infinite-scroll="scroll()" 
+		infinite-scroll-active="active">
+		<div ng-repeat="item in items" style="background:rgb({{item.rgb}})"></div>
+	</div>
+	
+
 	<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.0.8/angular.js"></script>
 	<script src="../dist/infinite-scroll.js"></script>
 	<script>
@@ -44,6 +70,8 @@
 			$scope.items = [];
 
 			$scope.active = true;
+
+			$scope.containerElement = angular.element(document.getElementsByClassName('container1'));
 			
 			$scope.scroll = function() {
 

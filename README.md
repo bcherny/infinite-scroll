@@ -51,13 +51,26 @@ angular
 ```js
 function Controller ($scope) {
    $scope.callbackFn = function() {
-   	  // must return a thenable promise
-   	  // see demo/index.html if you're not sure what that means
+      // must return a thenable promise
+      // see demo/index.html if you're not sure what that means
    };
 }
 ```
 
-*Note: When `callbackFn` returns a rejected promise, infinite-scroll will deactivate itself. It can then be reactivated by setting the infinite-scroll-active attribute to true.*
+*Note:*
+- When `callbackFn` returns a rejected promise, infinite-scroll will deactivate itself. It can then be reactivated by setting the infinite-scroll-active attribute to true. *
+
+- You can also use float elements within infinite scroll. However, you need to wrap the floated elements with a parent element that clear the float. For example:
+
+```html
+<div infinite-scroll="callbackFn">
+    <ul class="clearfix">
+        <li class="pull-left">item 1</li>
+        <li class="pull-left">item 2</li>
+        <li class="pull-left">item 3</li>
+    </ul>
+</div>
+```
 
 ## Configuration
 
@@ -78,6 +91,13 @@ function Controller ($scope) {
 
 <!-- set infinite scroll className to "inactive" when infinite-scroll is disabled -->
 <div infinite-scroll="callbackFn5" infinite-scroll-disabled-class="inactive"></div>
+
+<!-- set infinite scroll to use custom specific container -->
+<div infinite-scroll="callbackFn6" infinite-scroll-container="containerElement"></div>
+
+<!-- set infinite scroll to use parent element as local container -->
+<div infinite-scroll="callbackFn7" infinite-scroll-is-local="true"></div>
+
 ```
 
 ## Todo
