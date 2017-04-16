@@ -20,6 +20,9 @@ describe 'infinite-scroll', ->
 
 	beforeEach ->
 
+		@element.wrap angular.element """
+	        <body></body>
+	    """
 		(@$compile @element) @scope
 		do @scope.$apply
 		@scope = do @element.scope
@@ -59,7 +62,7 @@ describe 'infinite-scroll', ->
 			spyOn @scope, 'load'
 
 			@scope.active = true
-			@scope.windowHeight = 1
+			@scope.containerHeight = 1
 			@scope.tolerance = 0
 			@element[0].scrollHeight = 0
 			@scope.elementOffset = top: 0
@@ -69,12 +72,54 @@ describe 'infinite-scroll', ->
 			do expect @scope.load
 			.toHaveBeenCalled
 
+		it 'should call #load if the user scrolled to the bottom of the container', ->
+
+			@element.wrap angular.element """
+				<div class="container"></div>
+			"""
+			(@$compile @element) @scope
+			do @scope.$apply
+			@scope = do @element.scope
+
+			spyOn @scope, 'load'
+
+			@scope.active = true
+			@scope.containerHeight = 1
+			@scope.tolerance = 0
+			@element[0].scrollHeight = 0
+			@scope.elementOffset = top: 0
+
+			do @scope.check
+
+			do expect @scope.load
+			.toHaveBeenCalled
 
 		it 'should not call #load otherwise', ->
 
 			spyOn @scope, 'load'
 
-			@scope.windowHeight = 0
+			@scope.containerHeight = 0
+			@scope.tolerance = 0 
+			@element[0].scrollHeight = 0
+			@scope.elementOffset = top: 0
+
+			do @scope.check
+
+			do expect @scope.load
+			.not.toHaveBeenCalled
+
+		it 'should not call #load otherwise with container', ->
+			
+			@element.wrap angular.element """
+				<div class="container"></div>
+			"""
+			(@$compile @element) @scope
+			do @scope.$apply
+			@scope = do @element.scope
+
+			spyOn @scope, 'load'
+
+			@scope.containerHeight = 0
 			@scope.tolerance = 0
 			@element[0].scrollHeight = 0
 			@scope.elementOffset = top: 0
@@ -146,15 +191,15 @@ describe 'infinite-scroll', ->
 
 	describe '#measure', ->
 
-		it 'should set scope.windowHeight to the window height', inject ($window) ->
+		it 'should set scope.containerHeight to the window height', inject ($window) ->
 
-			@scope.windowHeight = 0
+			@scope.containerHeight = 0
 
-			$window.innerHeight = 100
+			(angular.element $window).innerHeight = 100
 
 			do @scope.measure
 
-			expect @scope.windowHeight
+			expect @scope.containerHeight
 			.toBe $window.innerHeight
 
 
